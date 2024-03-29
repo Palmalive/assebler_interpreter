@@ -1,4 +1,3 @@
-import exceptions.RegisterException;
 import input.Input;
 import instructions.InstructionExecutor;
 import registers.RegisterService;
