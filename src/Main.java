@@ -1,14 +1,22 @@
-import excaptions.RegisterException;
+import exceptions.RegisterException;
+import input.Input;
+import instructions.InstructionExecutor;
 import registers.RegisterService;
 import registers.Registers;
 
-public class Main {
-    public static void main(String[] args) throws RegisterException {
+import java.io.IOException;
 
-        RegisterService.put(Registers.RAX, 0x0102030405060708L);
-        System.out.println(Long.toHexString(RegisterService.get(Registers.RAX)));
-        System.out.println(Long.toHexString(RegisterService.get(Registers.EAX)));
-        System.out.println(Long.toHexString(RegisterService.get(Registers.AX)));
-        System.out.println(Long.toHexString(RegisterService.get(Registers.AL)));
+public class Main {
+    public static void main(String[] args) throws RegisterException, IOException {
+        Input input = new Input();
+        var list= input.formatInputFile();
+
+
+        InstructionExecutor instructionExecutor = new InstructionExecutor();
+        instructionExecutor.startProgram(list);
+        System.out.println(RegisterService.get(Registers.RAX));
+        System.out.println(RegisterService.get(Registers.RBX));
+        System.out.println(RegisterService.get(Registers.RCX));
+
     }
 }
