@@ -6,7 +6,7 @@ public class RegisterService{
 
      private static final long[] registers = new long[16];
 
-    public static void put(Registers register, long value) throws RegisterException {;
+    public static void put(Registers register, long value) throws RegisterException {
         registers[register.index] =  switch (register.bits){
             case 64 -> value;
             case 32 -> value & 0xffffffffL;
