@@ -4,7 +4,7 @@ import exceptions.RegisterException;
 
 public class RegisterService {
 
-    private static final long[] registers = new long[16];
+    public static final long[] registers = new long[16];
 
     public static void put(Registers register, long value) {
         registers[register.index] = switch (register.bits) {

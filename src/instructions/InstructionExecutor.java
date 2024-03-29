@@ -3,13 +3,13 @@ package instructions;
 import java.util.List;
 
 public class InstructionExecutor {
-    int instructionPointer;
+    static int instructionPointer;
 
     public InstructionExecutor() {
         instructionPointer = 0;
     }
 
-    public void startProgram(List<String> instructions) {
+    public static void executeCode(List<String> instructions) {
         while (instructionPointer < instructions.size()) {
             String[] tokens = instructions.get(instructionPointer).split(" ", 2);
             instructionPointer++;

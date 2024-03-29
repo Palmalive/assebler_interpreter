@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Input {
 
-    public List<String> formatInputFile() throws IOException {
+    public static List<String> formatInputFile() throws IOException {
         List<String> s = new ArrayList<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader("input.txt"))) {
