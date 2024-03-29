@@ -71,12 +71,4 @@ public enum Registers {
         this.index = index;
         this.bits = bits;
     }
-
-    public int getIndex() {
-        return index;
-    }
-
-    public int getBits() {
-        return bits;
-    }
 }

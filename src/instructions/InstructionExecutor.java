@@ -1,7 +1,5 @@
 package instructions;
 
-import exceptions.RegisterException;
-
 import java.util.List;
 
 public class InstructionExecutor {
