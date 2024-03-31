@@ -1,6 +1,6 @@
 package exceptions;
 
-public class RegisterException extends Throwable {
+public class RegisterException extends AssemblerInterpreterException {
     public RegisterException(String message) {
         super(message);
     }
