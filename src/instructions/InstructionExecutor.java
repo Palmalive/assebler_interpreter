@@ -19,6 +19,7 @@ public class InstructionExecutor {
             try {
                 instruction.execute(tokens[1]);
             } catch (InstructionException e) {
+
                 System.out.println("\u001B[31m" + "^".repeat(instructions.get(instructionPointer).length()));
                 System.out.println("There is wrong syntax at line " + (instructionPointer+1)+".");
                 System.out.println(e.getMessage() + "." + "\u001B[0m");

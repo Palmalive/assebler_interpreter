@@ -87,8 +87,21 @@ public enum Instructions {
     public abstract void execute(String arguments) throws InstructionException;
 
     private static long getValueFromRegister(String token) throws InstructionException {
+
+        int radix = 10;
+        if (token.startsWith("0x") || token.startsWith("0b")) {
+            switch (token.substring(0,2)){
+                case "0x" -> {token = token.substring(2);
+                    radix = 16;
+                }
+                case "0b" -> {token = token.substring(2);
+                    radix = 2;}
+
+            }
+        }
+
         if (token.matches("[-+]?\\d+")) {
-            return Long.parseLong(token);
+            return Long.parseLong(token, radix);
         } else {
             try {
                 return RegisterService.get(Registers.valueOf(token.toUpperCase()));
