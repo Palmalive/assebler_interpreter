@@ -1,6 +1,4 @@
-mov RAX, 0xffffffff 
-add RAX, RAX, 3
-adc RAX, RAX, 2
-sub RAX, RAX, 5
-mov RAX, 0xfffffffe
-add RAX, RAX, 1
+_start:
+    mov RAX, 1
+    mov RBX, 2 
+set_RCX:  mov RCX, 3

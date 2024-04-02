@@ -108,23 +108,23 @@ public enum Instructions {
 
     private static long getValueFromRegister(String token) throws InstructionException {
 
-        int radix = 10;
+
         if (token.startsWith("0x") || token.startsWith("0b")) {
             switch (token.substring(0, 2)) {
                 case "0x" -> {
                     token = token.substring(2);
-                    radix = 16;
+                    token = String.valueOf(Long.parseLong(token, 16));
                 }
                 case "0b" -> {
                     token = token.substring(2);
-                    radix = 2;
+                    token = String.valueOf(Long.parseLong(token, 2));
                 }
 
             }
         }
 
         if (token.matches("[-+]?\\d+")) {
-            return Long.parseLong(token, radix);
+            return Long.parseLong(token);
         } else {
             try {
                 return RegisterService.get(Registers.valueOf(token.toUpperCase()));
