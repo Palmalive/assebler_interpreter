@@ -229,7 +229,7 @@ public enum Instructions {
 
     RET {
         @Override
-        public void execute(String arguments) throws AssemblerInterpreterException {
+        public void execute(String arguments) {
             InstructionExecutor.instructionPointer = (int) RegisterService.get(Registers.BP);
         }
     }
