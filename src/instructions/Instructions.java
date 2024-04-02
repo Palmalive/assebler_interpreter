@@ -1,6 +1,7 @@
 package instructions;
 
 import exceptions.InstructionException;
+import fiags.FlagsService;
 import registers.RegisterService;
 import registers.Registers;
 
@@ -26,8 +27,10 @@ public enum Instructions {
                     .value2(tokens[2])
                     .destination(tokens[0])
                     .build();
+            long result = valuesParser.value1 + valuesParser.value2;
+            FlagsService.carryFlag = result > 0xffffffffL;
 
-            RegisterService.put(valuesParser.destination, valuesParser.value1 + valuesParser.value2);
+            RegisterService.put(valuesParser.destination, result);
         }
     },
 
@@ -41,6 +44,7 @@ public enum Instructions {
                     .destination(tokens[0])
                     .build();
 
+            FlagsService.carryFlag = valuesParser.value1 < valuesParser.value2;
             RegisterService.put(valuesParser.destination, valuesParser.value1 - valuesParser.value2);
         }
     },
@@ -82,6 +86,22 @@ public enum Instructions {
 
             RegisterService.put(valuesParser.destination, valuesParser.value1 | valuesParser.value2);
         }
+    },
+
+
+    ADC {
+        @Override
+        public void execute(String arguments) throws InstructionException {
+            String[] tokens = arguments.split(" ");
+            ValuesParser valuesParser = new ValuesParser.Builder()
+                    .value1(tokens[1])
+                    .value2(tokens[2])
+                    .destination(tokens[0])
+                    .build();
+
+            long result = valuesParser.value1 + valuesParser.value2 + (FlagsService.carryFlag ? 1 : 0);
+            RegisterService.put(valuesParser.destination, result);
+        }
     };
 
     public abstract void execute(String arguments) throws InstructionException;
@@ -90,12 +110,15 @@ public enum Instructions {
 
         int radix = 10;
         if (token.startsWith("0x") || token.startsWith("0b")) {
-            switch (token.substring(0,2)){
-                case "0x" -> {token = token.substring(2);
+            switch (token.substring(0, 2)) {
+                case "0x" -> {
+                    token = token.substring(2);
                     radix = 16;
                 }
-                case "0b" -> {token = token.substring(2);
-                    radix = 2;}
+                case "0b" -> {
+                    token = token.substring(2);
+                    radix = 2;
+                }
 
             }
         }
@@ -115,11 +138,13 @@ public enum Instructions {
         long value1;
         long value2;
         Registers destination;
+
         public ValuesParser(Builder builder) {
             this.value1 = builder.value1;
             this.value2 = builder.value2;
             this.destination = builder.destination;
         }
+
         public static class Builder {
             long value1;
             long value2;

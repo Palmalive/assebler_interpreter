@@ -1,17 +1,6 @@
-// тестовая программа на ассемблере
-//mov RAX, 10          // помещаем в RAX число 10
-//mul RAX, RAX, 2       // умножаем RAX на 2 и помещаем результат в RAX
-//mov RBX, 12          // помещаем в RBX число 12
-//add RDX, RAX, RBX      // складываем RAX и RBX и помещаем результат в RDX
-//add RDX, RDX, 2       // складываем RDX и число 2 и помещаем результат в RDX
-//mov RCX, 4           // помещаем в RCX число 4
-//sub RDX, RDX, RCX      // вычитаем из RDX число из RCX и помещаем результат в RDX
-
-//тестовая программа на ассемблере
-//mov RDX, 10          // помещаем в RDX число 10 - 1010 в двоичной системе
-//mov RAX, 3           // помещаем в RAX число 3 - 0011 в двоичной системе
-//add RTX, 10, 10
-//and RBX, RDX, RAX      // RBX = RDX & RAX = 1010 & 0011 = 0010 = 2
-//orr RCX, RDX, RAX      // RCX = RDX | RAX = 1010 | 0011 = 1011 = 11
-
-add RAX 0b10111 0b10111
+mov RAX, 0xffffffff 
+add RAX, RAX, 3
+adc RAX, RAX, 2
+sub RAX, RAX, 5
+mov RAX, 0xfffffffe
+add RAX, RAX, 1
