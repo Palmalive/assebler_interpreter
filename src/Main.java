@@ -1,6 +1,7 @@
 import input.Input;
 import instructions.InstructionExecutor;
-import labels.LabelService;
+import registers.RegisterService;
+import registers.Registers;
 
 import java.io.IOException;
 
@@ -12,7 +13,9 @@ public class Main {
         InstructionExecutor.executeCode(input);
 
 
-        System.out.println(LabelService.getAllLabels());
+        System.out.println(RegisterService.get(Registers.RAX));
+        System.out.println(RegisterService.get(Registers.RBX));
+        System.out.println(RegisterService.get(Registers.RCX));
 
 
 

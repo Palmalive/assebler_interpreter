@@ -1,7 +1,9 @@
 package instructions;
 
 import exceptions.InstructionException;
+import exceptions.LabelException;
 import fiags.FlagsService;
+import labels.LabelService;
 import registers.RegisterService;
 import registers.Registers;
 
@@ -29,8 +31,9 @@ public enum Instructions {
                     .build();
             long result = valuesParser.value1 + valuesParser.value2;
             FlagsService.carryFlag = result > 0xffffffffL;
-
             RegisterService.put(valuesParser.destination, result);
+
+            FlagsService.notMovBBeqBne(result);
         }
     },
 
@@ -45,7 +48,10 @@ public enum Instructions {
                     .build();
 
             FlagsService.carryFlag = valuesParser.value1 < valuesParser.value2;
-            RegisterService.put(valuesParser.destination, valuesParser.value1 - valuesParser.value2);
+            long result = valuesParser.value1 - valuesParser.value2;
+            RegisterService.put(valuesParser.destination, result);
+
+            FlagsService.notMovBBeqBne(result);
         }
     },
     MUL {
@@ -58,7 +64,10 @@ public enum Instructions {
                     .destination(tokens[0])
                     .build();
 
-            RegisterService.put(valuesParser.destination, valuesParser.value1 * valuesParser.value2);
+            long result = valuesParser.value1 * valuesParser.value2;
+            RegisterService.put(valuesParser.destination, result);
+
+            FlagsService.notMovBBeqBne(result);
         }
     },
     AND {
@@ -71,7 +80,10 @@ public enum Instructions {
                     .destination(tokens[0])
                     .build();
 
-            RegisterService.put(valuesParser.destination, valuesParser.value1 & valuesParser.value2);
+            long result = valuesParser.value1 & valuesParser.value2;
+            RegisterService.put(valuesParser.destination, result);
+
+            FlagsService.notMovBBeqBne(result);
         }
     },
     ORR {
@@ -84,7 +96,10 @@ public enum Instructions {
                     .destination(tokens[0])
                     .build();
 
-            RegisterService.put(valuesParser.destination, valuesParser.value1 | valuesParser.value2);
+            long result = valuesParser.value1 | valuesParser.value2;
+            RegisterService.put(valuesParser.destination, result);
+
+            FlagsService.notMovBBeqBne(result);
         }
     },
 
@@ -101,8 +116,63 @@ public enum Instructions {
 
             long result = valuesParser.value1 + valuesParser.value2 + (FlagsService.carryFlag ? 1 : 0);
             RegisterService.put(valuesParser.destination, result);
+
+            FlagsService.notMovBBeqBne(result);
         }
-    };
+    },
+    CMP {
+        @Override
+        public void execute(String arguments) throws InstructionException {
+            String[] tokens = arguments.split(" ");
+            ValuesParser valuesParser = new ValuesParser.Builder()
+                    .value1(tokens[0])
+                    .value2(tokens[1])
+                    .build();
+
+            long result = valuesParser.value1 - valuesParser.value2;
+
+            FlagsService.carryFlag = valuesParser.value1 < valuesParser.value2;
+
+            FlagsService.notMovBBeqBne(result);
+        }
+    },
+    B {
+        @Override
+        public void execute(String arguments) throws InstructionException {
+            String[] tokens = arguments.split(" ");
+            ValuesParser valuesParser = new ValuesParser.Builder()
+                    .labelAddress(tokens[0])
+                    .build();
+
+            InstructionExecutor.instructionPointer = valuesParser.labelAddress-1;
+        }
+    },
+    BEQ {
+        @Override
+        public void execute(String arguments) throws InstructionException {
+            String[] tokens = arguments.split(" ");
+            ValuesParser valuesParser = new ValuesParser.Builder()
+                    .labelAddress(tokens[0])
+                    .build();
+
+            if (FlagsService.zeroFlag) {
+                InstructionExecutor.instructionPointer = valuesParser.labelAddress-1;
+            }
+        }
+    },
+    BNE {
+        @Override
+        public void execute(String arguments) throws InstructionException {
+            String[] tokens = arguments.split(" ");
+            ValuesParser valuesParser = new ValuesParser.Builder()
+                    .labelAddress(tokens[0])
+                    .build();
+
+            if (!FlagsService.zeroFlag) {
+                InstructionExecutor.instructionPointer = valuesParser.labelAddress-1;
+            }
+        }
+    },;
 
     public abstract void execute(String arguments) throws InstructionException;
 
@@ -138,17 +208,20 @@ public enum Instructions {
         long value1;
         long value2;
         Registers destination;
+        int labelAddress;
 
         public ValuesParser(Builder builder) {
             this.value1 = builder.value1;
             this.value2 = builder.value2;
             this.destination = builder.destination;
+            this.labelAddress = builder.labelAddress;
         }
 
         public static class Builder {
             long value1;
             long value2;
             Registers destination;
+            int labelAddress;
 
             public Builder value1(String value1) throws InstructionException {
                 this.value1 = Instructions.getValueFromRegister(value1);
@@ -168,6 +241,18 @@ public enum Instructions {
                 }
                 return this;
             }
+
+            public Builder labelAddress(String labelAddress) throws InstructionException {
+
+                try {
+                    this.labelAddress = LabelService.getLabelAddress(labelAddress);
+                } catch (LabelException e) {
+                    throw new InstructionException(e.getMessage());
+                }
+
+                return this;
+            }
+
 
             public ValuesParser build() {
                 return new ValuesParser(this);

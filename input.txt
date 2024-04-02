@@ -1,4 +1,22 @@
-_start:
-    mov RAX, 1
-    mov RBX, 2 
-set_RCX:  mov RCX, 3
+//    mov RAX, 1
+//    b exit       // переход к метке exit
+//    mov RBX, 2
+//exit:           // метка exit
+//    mov RCX, 3
+
+//  mov RAX, 2
+//    cmp RAX, 2       // сравниваем RAX с числом 2
+//    beq equal      // переход к метке equal
+//    mov RBX, 4       // если RAX != 2, то RBX = 4
+//    b end          // переход к концу программы
+//equal:           // метка equal
+//    mov RCX, 8    // если RAX == 2, то RCX = 8
+//end:            // метка представляет конец программы
+
+    mov RAX, 0
+    b if            // переходим к проверке условия
+while:
+    add RAX, RAX, 1       // действия цикла - увеличиваем RAX на 1
+if:                 // метка if - проверка условия цикла
+    cmp RAX, 3       // пока RAX не будет равен 3
+    bne while       // если RAX !=3 , то повторяем цикл
