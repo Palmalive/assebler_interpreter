@@ -214,7 +214,27 @@ public enum Instructions {
 
 
         }
+    },
+    BL {
+        @Override
+        public void execute(String arguments) throws AssemblerInterpreterException {
+            String[] tokens = arguments.split(" ");
+            ValuesParser valuesParser = new ValuesParser.Builder()
+                    .labelAddress(tokens[0])
+                    .build();
+            RegisterService.put(Registers.BP, InstructionExecutor.instructionPointer);
+            InstructionExecutor.instructionPointer = valuesParser.labelAddress-1;
+        }
+    },
+
+    RET {
+        @Override
+        public void execute(String arguments) throws AssemblerInterpreterException {
+            InstructionExecutor.instructionPointer = (int) RegisterService.get(Registers.BP);
+        }
     }
+
+
 
 
     ;

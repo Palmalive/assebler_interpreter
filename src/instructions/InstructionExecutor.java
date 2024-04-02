@@ -17,8 +17,15 @@ public class InstructionExecutor {
             System.out.println(instructions.get(instructionPointer));
             String[] tokens = instructions.get(instructionPointer).split(" ", 2);
             Instructions instruction = Instructions.valueOf(tokens[0].toUpperCase());
+
+            String arguments = "";
+
+            if (tokens.length > 1) {
+                arguments = tokens[1];
+            }
+
             try {
-                instruction.execute(tokens[1]);
+                instruction.execute(arguments);
             } catch (InstructionException e) {
 
                 System.out.println("\u001B[31m" + "^".repeat(instructions.get(instructionPointer).length()));

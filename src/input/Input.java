@@ -19,6 +19,7 @@ public class Input {
             int lineNumber = 0;
 
             while (line != null) {
+
                 line = formatLine(line);
                 if (line == null) {
                     line = br.readLine();
@@ -52,7 +53,7 @@ public class Input {
     private static String formatLine(String line){
 
 
-        if (line.isBlank()) {
+        if (line.isBlank() || line.equals("//")) {
             return null;
         }
         line = line.split("//")[0];

@@ -1,16 +1,21 @@
-//mov RBX, 4   // RBX = 4
-//push RBX     // помещаем в стек число из RBX
-//push 5      // помещаем в стек число 5
-//pop RAX      // извлекаем из стека значение в RAX
-//pop RCX      // извлекаем из стека значение в RCX
+//b _start        // переходим к началу программы
+//
+//// функция double - удваивает значение регистра RAX
+//double:
+//    add RAX, RAX, RAX      // RAX = RAX + RAX
+//    ret
+//_start:
+//    mov RAX, 1
+//    bl double       // вызываем функцию double
 
-mov RAX, 4
-push 1
-push 2
-push 3
-push 4
-push 5
-push 6
-push 7
-push 8
-push 9
+b _start        // переходим к началу программы
+ 
+// функция double - удваивает значение регистра RAX
+double:
+    add RAX, RAX, RAX      // RAX = RAX + RAX
+    ret
+_start:
+    mov RAX, 1
+    bl double
+    bl double
+    bl double
