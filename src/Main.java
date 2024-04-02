@@ -18,6 +18,5 @@ public class Main {
         System.out.println(RegisterService.get(Registers.RCX));
 
 
-
     }
 }

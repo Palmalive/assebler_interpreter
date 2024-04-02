@@ -1,11 +1,14 @@
 package instructions;
 
+import exceptions.AssemblerInterpreterException;
 import exceptions.InstructionException;
 import exceptions.LabelException;
+import exceptions.StackException;
 import fiags.FlagsService;
 import labels.LabelService;
 import registers.RegisterService;
 import registers.Registers;
+import stack.StackService;
 
 public enum Instructions {
     MOV {
@@ -172,9 +175,51 @@ public enum Instructions {
                 InstructionExecutor.instructionPointer = valuesParser.labelAddress-1;
             }
         }
-    },;
+    },
 
-    public abstract void execute(String arguments) throws InstructionException;
+    PUSH {
+        @Override
+        public void execute(String arguments) throws InstructionException, StackException {
+            String[] tokens = arguments.split(" ");
+            ValuesParser valuesParser = new ValuesParser.Builder()
+                    .value1(tokens[0])
+                    .build();
+
+            if (RegisterService.get(Registers.SP) == 0) {
+                throw new StackException("Stack is overflow");
+            }
+            StackService.push(valuesParser.value1);
+            RegisterService.put(Registers.SP, RegisterService.get(Registers.SP)-1);
+
+
+        }
+    },
+
+    POP {
+        @Override
+        public void execute(String arguments) throws InstructionException, StackException {
+            final int  STACK_SIZE = 7;
+
+            String[] tokens = arguments.split(" ");
+            ValuesParser valuesParser = new ValuesParser.Builder()
+                    .destination(tokens[0])
+                    .build();
+
+            if (RegisterService.get(Registers.SP) == STACK_SIZE) {
+                throw new StackException("Stack is empty");
+            }
+
+            RegisterService.put(valuesParser.destination, StackService.pop());
+            RegisterService.put(Registers.SP, RegisterService.get(Registers.SP)+1);
+
+
+        }
+    }
+
+
+    ;
+
+    public abstract void execute(String arguments) throws AssemblerInterpreterException;
 
     private static long getValueFromRegister(String token) throws InstructionException {
 
